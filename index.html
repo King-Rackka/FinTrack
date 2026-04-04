@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FinTrack - Keuangan Mahasiswa</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="ambient">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+</div>
+
+<div id="notifContainer" class="notif-container"></div>
+
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark">$</div>
+    <div>
+      <div class="logo-name">FinTrack</div>
+    </div>
+  </div>
+  <nav class="sidebar-nav">
+    <a href="#" class="nav-item active" data-page="dashboard"><span class="nav-icon">◈</span><span>Dashboard</span></a>
+    <a href="#" class="nav-item" data-page="pemasukan"><span class="nav-icon">↓</span><span>Pemasukan</span></a>
+    <a href="#" class="nav-item" data-page="pengeluaran"><span class="nav-icon">↑</span><span>Pengeluaran</span></a>
+    <a href="#" class="nav-item" data-page="dompet"><span class="nav-icon">👛</span><span>Dompet</span></a>
+    <a href="#" class="nav-item" data-page="goals"><span class="nav-icon">◎</span><span>Goals</span></a>
+    <a href="#" class="nav-item" data-page="tagihan"><span class="nav-icon">🗓</span><span>Tagihan</span></a>
+    <a href="#" class="nav-item" data-page="settings"><span class="nav-icon">⚙</span><span>Pengaturan</span></a>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="sidebar-user">
+      <div class="user-avatar">$</div>
+      <div>
+        <div class="user-name">Orang Sukses</div>
+        <div class="user-status">● Online</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<main class="main" id="main">
+
+  <header class="topbar">
+    <button class="menu-btn" id="menuBtn">☰</button>
+    <div class="topbar-title" id="topbarTitle">Dashboard</div>
+    <div class="topbar-month">
+      <select id="bulanFilter"><option value="">Semua</option></select>
+    </div>
+  </header>
+
+  <!-- DASHBOARD -->
+  <section class="page active" id="page-dashboard">
+    <div class="cards-grid">
+      <div class="summary-card card-green">
+        <div class="card-label">Total Pemasukan</div>
+        <div class="card-value" id="totalPemasukan">Rp 0</div>
+        <div class="card-sub">bulan ini</div>
+        <div class="card-icon">↓</div>
+      </div>
+      <div class="summary-card card-red">
+        <div class="card-label">Total Pengeluaran</div>
+        <div class="card-value" id="totalPengeluaran">Rp 0</div>
+        <div class="card-sub">bulan ini</div>
+        <div class="card-icon">↑</div>
+      </div>
+      <div class="summary-card card-blue">
+        <div class="card-label">Total Saldo</div>
+        <div class="card-value" id="totalSaldo">Rp 0</div>
+        <div class="card-sub">semua dompet</div>
+        <div class="card-icon">👛</div>
+      </div>
+      <div class="summary-card card-orange">
+        <div class="card-label">Total Tabungan</div>
+        <div class="card-value" id="totalTabungan">Rp 0</div>
+        <div class="card-sub">dari semua goals</div>
+        <div class="card-icon">◎</div>
+      </div>
+    </div>
+    <div class="charts-row">
+      <div class="chart-card">
+        <div class="chart-header"><div class="chart-title">Pengeluaran per Kategori</div><div class="chart-badge">Bulan Ini</div></div>
+        <div class="chart-wrap"><canvas id="chartKategori"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-header"><div class="chart-title">Tren 6 Bulan Terakhir</div><div class="chart-badge">Pemasukan vs Pengeluaran</div></div>
+        <div class="chart-wrap"><canvas id="chartTren"></canvas></div>
+      </div>
+    </div>
+    <div class="bottom-row">
+      <div class="glass-card">
+        <div class="section-header">
+          <div class="section-title">🎯 Progress Goals</div>
+          <a href="#" class="see-all" data-page="goals">Lihat Semua →</a>
+        </div>
+        <div id="dashGoals"><div class="empty-state">Belum ada goals.</div></div>
+      </div>
+      <div class="glass-card">
+        <div class="section-header">
+          <div class="section-title">🕒 Transaksi Terbaru</div>
+          <a href="#" class="see-all" data-page="pengeluaran">Lihat Semua →</a>
+        </div>
+        <div id="dashTransaksi"><div class="empty-state">Belum ada transaksi.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PEMASUKAN -->
+  <section class="page" id="page-pemasukan">
+    <div class="page-layout">
+      <div class="glass-card form-card">
+        <div class="form-title">+ Tambah Pemasukan</div>
+        <div class="form-group"><label>Tanggal</label><input type="date" id="pemasukanTanggal" class="input"></div>
+        <div class="form-group">
+          <label>Sumber Pemasukan</label>
+          <select id="pemasukanSumber" class="input">
+            <option value="KIP">💰 KIP</option>
+            <option value="Beasiswa">🎓 Beasiswa Lain</option>
+            <option value="Freelance">💻 Freelance</option>
+            <option value="Kiriman Ortu">👨‍👩‍👧 Kiriman Ortu</option>
+            <option value="Part-time">🧑‍💼 Part-time</option>
+            <option value="Lainnya">📦 Lainnya</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Nominal (Rp)</label><input type="number" id="pemasukanNominal" class="input" placeholder="0" min="0"></div>
+        <div class="form-group"><label>Masuk ke Dompet</label><select id="pemasukanDompet" class="input"></select></div>
+        <div class="form-group"><label>Catatan (opsional)</label><input type="text" id="pemasukanCatatan" class="input" placeholder="Tambah catatan..."></div>
+        <button class="btn-primary" id="btnSavePemasukan">Simpan Pemasukan</button>
+        <div id="pemasukanMsg" class="form-msg"></div>
+      </div>
+      <div class="glass-card table-card">
+        <div class="section-header">
+          <div class="section-title">Riwayat Pemasukan</div>
+          <div class="total-badge">Total: <span id="totalPemasukanPage">Rp 0</span></div>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>Tanggal</th><th>Sumber</th><th>Nominal</th><th>Dompet</th><th>Catatan</th><th>Aksi</th></tr></thead>
+            <tbody id="tablePemasukan"><tr><td colspan="6" class="empty-state">Belum ada data.</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PENGELUARAN -->
+  <section class="page" id="page-pengeluaran">
+    <div class="page-layout">
+      <div class="glass-card form-card">
+        <div class="form-title">+ Tambah Pengeluaran</div>
+        <div class="form-group"><label>Tanggal</label><input type="date" id="pengeluaranTanggal" class="input"></div>
+        <div class="form-group"><label>Deskripsi</label><input type="text" id="pengeluaranDeskripsi" class="input" placeholder="Contoh: Makan siang warteg"></div>
+        <div class="form-group"><label>Kategori</label><select id="pengeluaranKategori" class="input"></select></div>
+        <div class="form-group"><label>Nominal (Rp)</label><input type="number" id="pengeluaranNominal" class="input" placeholder="0" min="0"></div>
+        <div class="form-group"><label>Dari Dompet</label><select id="pengeluaranDompet" class="input"></select></div>
+        <div class="form-group"><label>Catatan (opsional)</label><input type="text" id="pengeluaranCatatan" class="input" placeholder="Tambah catatan..."></div>
+        <button class="btn-primary" id="btnSavePengeluaran">Simpan Pengeluaran</button>
+        <div id="pengeluaranMsg" class="form-msg"></div>
+      </div>
+      <div class="glass-card table-card">
+        <div class="section-header">
+          <div class="section-title">Riwayat Pengeluaran</div>
+          <div class="total-badge">Total: <span id="totalPengeluaranPage">Rp 0</span></div>
+        </div>
+        <div class="filter-row">
+          <select id="filterKategori" class="input input-sm"></select>
+          <select id="filterDompet" class="input input-sm"></select>
+        </div>
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead><tr><th>Tanggal</th><th>Deskripsi</th><th>Kategori</th><th>Nominal</th><th>Dompet</th><th>Aksi</th></tr></thead>
+            <tbody id="tablePengeluaran"><tr><td colspan="6" class="empty-state">Belum ada data.</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DOMPET -->
+  <section class="page" id="page-dompet">
+    <div class="dompet-total-bar">
+      <div class="dompet-total-label">Total Saldo Semua Dompet</div>
+      <div class="dompet-total-val" id="totalSaldoSemua">Rp 0</div>
+    </div>
+
+    <div class="page-layout">
+      <!-- Form tambah dompet -->
+      <div class="glass-card form-card">
+        <div class="form-title">👛 Tambah Dompet</div>
+        <div class="form-group"><label>Emoji</label><input type="text" id="dompetEmoji" class="input" placeholder="💰" maxlength="4"></div>
+        <div class="form-group"><label>Nama Dompet</label><input type="text" id="dompetNama" class="input" placeholder="Contoh: BCA, GoPay, Cash"></div>
+        <div class="form-group"><label>Saldo Awal (Rp)</label><input type="number" id="dompetSaldoAwal" class="input" placeholder="0" min="0"></div>
+        <div class="form-group">
+          <label>Budget Bulanan (Rp) <span style="color:var(--text3);font-size:12px">opsional</span></label>
+          <input type="number" id="dompetBudget" class="input" placeholder="Kosongkan jika tanpa batas">
+        </div>
+        <div class="form-group"><label>Warna Kartu</label><select id="dompetWarna" class="input"></select></div>
+        <button class="btn-primary" id="btnSaveDompet">Tambah Dompet</button>
+        <div id="dompetMsg" class="form-msg"></div>
+
+        <div style="margin-top:24px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.06)">
+          <div class="form-title">⇄ Transfer antar Dompet</div>
+          <div class="form-group"><label>Tanggal</label><input type="date" id="transferTanggal" class="input"></div>
+          <div class="form-group"><label>Dari Dompet</label><select id="transferDari" class="input"></select></div>
+          <div class="form-group"><label>Ke Dompet</label><select id="transferKe" class="input"></select></div>
+          <div class="form-group"><label>Nominal (Rp)</label><input type="number" id="transferNominal" class="input" placeholder="0" min="0"></div>
+          <div class="form-group"><label>Catatan (opsional)</label><input type="text" id="transferCatatan" class="input" placeholder="Contoh: Tarik tunai"></div>
+          <button class="btn-primary" id="btnSaveTransfer">Catat Transfer</button>
+          <div id="transferMsg" class="form-msg"></div>
+        </div>
+      </div>
+
+      <!-- Kartu dompet & riwayat transfer -->
+      <div class="dompet-right">
+        <div id="dompetCards" class="dompet-cards-grid">
+          <div class="empty-state">Memuat dompet...</div>
+        </div>
+        <div class="glass-card" style="margin-top:16px">
+          <div class="section-header"><div class="section-title">⇄ Riwayat Transfer</div></div>
+          <div id="riwayatTransfer"><div class="empty-state">Belum ada transfer.</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GOALS -->
+  <section class="page" id="page-goals">
+    <div class="page-layout">
+      <div class="glass-card form-card">
+        <div class="form-title">🎯 Tambah Goal</div>
+        <div class="form-group"><label>Nama Tujuan</label><input type="text" id="goalsNama" class="input" placeholder="Contoh: Beli Laptop"></div>
+        <div class="form-group"><label>Target Nominal (Rp)</label><input type="number" id="goalsTarget" class="input" placeholder="0" min="0"></div>
+        <div class="form-group"><label>Sudah Terkumpul (Rp)</label><input type="number" id="goalsTerkumpul" class="input" placeholder="0" min="0"></div>
+        <div class="form-group"><label>Deadline (opsional)</label><input type="date" id="goalsDeadline" class="input"></div>
+        <button class="btn-primary" id="btnSaveGoals">Simpan Goal</button>
+        <div id="goalsMsg" class="form-msg"></div>
+      </div>
+      <div class="glass-card table-card">
+        <div class="section-header">
+          <div class="section-title">Daftar Goals Tabungan</div>
+          <div class="total-badge">Total: <span id="totalGoalsPage">Rp 0</span></div>
+        </div>
+        <div id="goalsList"><div class="empty-state">Belum ada goals. Yuk mulai menabung!</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TAGIHAN -->
+  <section class="page" id="page-tagihan">
+    <div class="page-layout">
+      <div class="glass-card form-card">
+        <div class="form-title">🗓️ Tambah Tagihan Rutin</div>
+        <div class="form-group"><label>Nama Tagihan</label><input type="text" id="tagihanNama" class="input" placeholder="Contoh: Spotify, Kos, dll"></div>
+        <div class="form-group"><label>Nominal (Rp)</label><input type="number" id="tagihanNominal" class="input" placeholder="0" min="0"></div>
+        <div class="form-group"><label>Kategori</label><select id="tagihanKategori" class="input"></select></div>
+        <div class="form-group"><label>Bayar dari Dompet</label><select id="tagihanDompet" class="input"></select></div>
+        <div class="form-group">
+          <label>Tanggal Jatuh Tempo (tiap bulan)</label>
+          <input type="number" id="tagihanTglJatuh" class="input" placeholder="Contoh: 5" min="1" max="28">
+          <small class="form-hint">Maks tgl 28 supaya aman di semua bulan</small>
+        </div>
+        <button class="btn-primary" id="btnSaveTagihan">Simpan Tagihan</button>
+        <div id="tagihanMsg" class="form-msg"></div>
+      </div>
+      <div class="glass-card table-card">
+        <div class="section-header"><div class="section-title">Tagihan Bulan Ini</div></div>
+        <div class="tagihan-summary">
+          <div class="tagihan-sum-item"><span class="tagihan-sum-label">Total Tagihan</span><span class="tagihan-sum-val" id="tagihanTotalBulan">Rp 0</span></div>
+          <div class="tagihan-sum-item"><span class="tagihan-sum-label">Belum Dibayar</span><span class="tagihan-sum-val danger" id="tagihanTotalBelum">Rp 0</span></div>
+        </div>
+        <div id="tagihanList"><div class="empty-state">Belum ada tagihan.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SETTINGS -->
+  <section class="page" id="page-settings">
+    <div class="page-layout">
+      <div class="glass-card form-card">
+        <div class="form-title">⚙️ Kelola Kategori</div>
+        <div class="form-group"><label>Emoji</label><input type="text" id="kategoriEmoji" class="input" placeholder="Contoh: 🛒" maxlength="4"></div>
+        <div class="form-group"><label>Nama Kategori</label><input type="text" id="kategoriNama" class="input" placeholder="Contoh: Belanja"></div>
+        <button class="btn-primary" id="btnSaveKategori">Tambah Kategori</button>
+        <div id="kategoriMsg" class="form-msg"></div>
+      </div>
+      <div class="glass-card table-card">
+        <div class="section-header"><div class="section-title">Daftar Kategori</div></div>
+        <div id="kategoriList"><div class="empty-state">Memuat kategori...</div></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- Bottom Nav -->
+<nav class="bottom-nav" id="bottomNav">
+  <a href="#" class="bnav-item active" data-page="dashboard"><span class="bnav-icon">◈</span><span>Home</span></a>
+  <a href="#" class="bnav-item" data-page="pemasukan"><span class="bnav-icon">↓</span><span>Masuk</span></a>
+  <a href="#" class="bnav-item" data-page="pengeluaran"><span class="bnav-icon">↑</span><span>Keluar</span></a>
+  <a href="#" class="bnav-item" data-page="dompet"><span class="bnav-icon">👛</span><span>Dompet</span></a>
+  <a href="#" class="bnav-item" data-page="tagihan"><span class="bnav-icon">🗓</span><span>Tagihan</span></a>
+</nav>
+
+<!-- Modal Update Goals -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-title">Update Tabungan</div>
+    <div class="form-group">
+      <label>Nominal Terkumpul Sekarang (Rp)</label>
+      <input type="number" id="modalTerkumpul" class="input" min="0">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" id="btnModalCancel">Batal</button>
+      <button class="btn-primary" id="btnModalSave">Simpan</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Edit Dompet -->
+<div class="modal-overlay" id="modalEditDompet">
+  <div class="modal">
+    <div class="modal-title">Edit Dompet</div>
+    <div class="form-group"><label>Emoji</label><input type="text" id="editDompetEmoji" class="input" maxlength="4"></div>
+    <div class="form-group"><label>Nama</label><input type="text" id="editDompetNama" class="input"></div>
+    <div class="form-group"><label>Budget Bulanan (Rp)</label><input type="number" id="editDompetBudget" class="input" placeholder="Kosongkan jika tanpa batas"></div>
+    <div class="form-group"><label>Warna Kartu</label><select id="editDompetWarna" class="input"></select></div>
+    <div class="modal-actions">
+      <button class="btn-secondary" id="btnCancelEditDompet">Batal</button>
+      <button class="btn-primary" id="btnSaveEditDompet">Simpan</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="js/supabase.js"></script>
+<script src="js/transaksi.js"></script>
+<script src="js/dompet.js"></script>
+<script src="js/goals.js"></script>
+<script src="js/dashboard.js"></script>
+<script src="js/tagihan.js"></script>
+</body>
+</html>
